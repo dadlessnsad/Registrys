@@ -45,7 +45,7 @@
     background: linear-gradient(135deg, #BCEB00 15.57%, #00EAEA 84.88%);
     box-shadow: 0px 10px 20px rgba(136, 120, 172, 0.2);
     border-radius: 12px;
-    font-family: 'Helvetica' serif;
+    font-family:'Helvetica';
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
@@ -68,7 +68,7 @@
     background: #FFFFFF;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 12px;
-    font-family: 'Helvetica' serif;
+    font-family:'Helvetica';
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
@@ -102,7 +102,7 @@
 }
 
 .ActionHeaderTitle {
-    font-family: 'Helvetica' serif;
+    font-family:'Helvetica';
     font-style: normal;
     font-weight: 700;
     font-size: 32px;
@@ -149,7 +149,7 @@
 .ActionLabelTitle {
     height: 22px;
     margin: 8px 4px;
-    font-family: 'Helvetica' serif;
+    font-family:'Helvetica';
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
@@ -186,7 +186,7 @@
 }
 
 .AlertNotOwnerText {
-    font-family: 'Helvetica' serif;
+    font-family:'Helvetica';
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
@@ -221,7 +221,7 @@
 .RoyaltyAddrLabel {
     min-width: 140px;
     height: 22px;
-    font-family: 'Helvetica' serif;
+    font-family:'Helvetica';
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
@@ -252,7 +252,7 @@
 .RoyaltyPercentLabel {
     width: 100px;
     height: 22px;
-    font-family: 'Helvetica' serif;
+    font-family:'Helvetica';
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
@@ -288,7 +288,7 @@
     align-self: stretch;
     flex-grow: 0;
     cursor: pointer;
-    font-family: 'Helvetica' serif;
+    font-family:'Helvetica';
     font-style: normal;
     font-weight: 700;
 }
@@ -311,13 +311,13 @@
     order: 0;
     align-self: stretch;
     flex-grow: 0;
-    font-family: 'Helvetica' serif;
+    font-family:'Helvetica';
     font-style: normal;
     font-weight: 700;
 }
 
 .AlertNotOwnerText {
-    font-family: 'Helvetica' serif;
+    font-family:'Helvetica';
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
