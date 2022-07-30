@@ -1,0 +1,2 @@
+export const EmbedAddress = '0x6bf18b8564814a2118548D9DD2e54Ff46f0343AE'
+export const EmbedAddressMainnet = '0x2A9647901684caaeC6f026eEc0b1355195313cB5'
