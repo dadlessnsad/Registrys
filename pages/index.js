@@ -17,11 +17,11 @@ export default function Home() {
     const [newReceiverAddr, setNewReceiverAddr] = useState('');
     const [newRoyaltyCut, setNewRoyaltyCut] = useState(0);
     const [contractOwner, setContractOwner] = useState('');
+    const [registryAbi, setRegistryAbi] = useState();
     const [isOwner, setIsOwner] = useState(null);
     const account = useContext(AccountContext)
     const provider = useContext(ProviderContext)
     const address = useContext(AddressContext)
-    console.log(isOwner)
 
     const ETHERSCAN_KEY = process.env.NEXT_PUBLIC_ETHERSCAN_KEY
 
@@ -48,33 +48,25 @@ export default function Home() {
 
     }, [account, provider, validContract, inputContract, url])
 
-    // async function getExistingRoyalties() {
-    //     try{
-    //         const 
-    //     } catch(error) {
-    //         console.log(error)
-    //     }
-    // }
-
-    console.log('new addr',  newReceiverAddr)
 
     async function handleSubmit() {
-        const res = await axios.get(registry)
-        const _abi = await JSON.parse(res.data.result);
         try {
             // setRoyaltiesByTokenAndTokenId
             if(provider && validContract == true) {
                 setLoading(true)
-                const contract = new ethers.Contract('0x6bf18b8564814a2118548D9DD2e54Ff46f0343AE', _abi, provider);
+                const res = await axios.get(registry)
+                const _abi = await JSON.parse(res.data.result);
+                const signer = provider.getSigner();
+                const _registry = new ethers.Contract('0x6bf18b8564814a2118548D9DD2e54Ff46f0343AE', _abi, signer);
                 const setPercentage = newRoyaltyCut * 100;
                 const data = [newReceiverAddr, setPercentage];
-                const royaltiesByTokenAndTokenId = await contract.royaltiesByToken(
+                const royaltiesByTokenAndTokenId = await _registry.setRoyaltiesByToken(
                     inputContract,
-                    [newReceiverAddr, setPercentage]
+                    [[newReceiverAddr, setPercentage]],
                 );
-                royaltiesByTokenAndTokenId.wait().then(() => {
+                royaltiesByTokenAndTokenId.wait
                     setLoading(false)
-                })
+                
             }
         } catch(err) {
             console.error(err)
@@ -84,6 +76,7 @@ export default function Home() {
     }
 
     useEffect(() => {
+
         if(provider && inputContract != '') {
             const isValid = ethers.utils.isAddress(inputContract);
             setValidContract(isValid)
@@ -95,6 +88,7 @@ export default function Home() {
 
         if(validContract) {
             getContractOwner()
+
         }
         const interval = setInterval(() => {
 
