@@ -4,11 +4,16 @@
   src: url(../fonts/Helvetica.ttf) format('truetype');
 }
 
+@font-face {
+  font-family: 'Helvetica-Bold';
+  src: url(../fonts/Helvetica-Bold.ttf) format('truetype');
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Helvetica' serif;
+  font-family: 'Helvetica' serif 'Helvetica-Bold' serif;
 }
 
 a {
