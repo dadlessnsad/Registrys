@@ -16,7 +16,7 @@ export default function Home() {
     const [validContract, setValidContract] = useState(null);
     const [invalidContract, setInvalidContract] = useState(null);
     const [newReceiverAddr, setNewReceiverAddr] = useState('');
-    const [newRoyaltyCut, setNewRoyaltyCut] = useState(0);
+    const [newRoyaltyCut, setNewRoyaltyCut] = useState(`0%`);
     const [contractOwner, setContractOwner] = useState('');
     const [registryAbi, setRegistryAbi] = useState();
     const [isOwner, setIsOwner] = useState(null);
@@ -57,6 +57,12 @@ export default function Home() {
 
     }, [account, provider, validContract, inputContract, url])
 
+    const getExistingRoyalties = useCallback(async () => {
+        if(validContract == true) {
+                setLoadingContractOwner(true)
+        }
+    } , [validContract])
+
     async function handleSubmit() {
         try {
             // setRoyaltiesByTokenAndTokenId
@@ -83,7 +89,7 @@ export default function Home() {
     }
 
     useEffect(() => {
-
+        console.log(newRoyaltyCut)
         if(provider && inputContract != '') {
             const isValid = ethers.utils.isAddress(inputContract);
             setValidContract(isValid)
@@ -184,15 +190,16 @@ export default function Home() {
                                 <label className={styles.RoyaltyAddrLabel} >Royalty Percent</label>
                                 <input 
                                     className={styles.RoyaltyPercentInput} 
-                                    type="text" 
+                                    type="number"
                                     min={0}
-                                    max={100}
-                                    placeholder={`0%`}
+                                    max={20}
+                                    placeholder={`0% - 20%`}
                                     required
                                     disabled={isOwner != true || validContract == false}
-                                    value={newRoyaltyCut}
+                                    value={newRoyaltyCut} 
                                     onChange={(e) => setNewRoyaltyCut(e.target.value)}
                                 />
+                                
                             </div>
                         </div>
                         {!loading && (    

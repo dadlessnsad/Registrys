@@ -45,7 +45,7 @@
     background: linear-gradient(135deg, #BCEB00 15.57%, #00EAEA 84.88%);
     box-shadow: 0px 10px 20px rgba(136, 120, 172, 0.2);
     border-radius: 12px;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Helvetica', sans-serif;
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
@@ -68,7 +68,7 @@
     background: #FFFFFF;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 12px;
-    font-family: 'Space Grotesk', sans-serif;;
+    font-family: 'Helvetica', sans-serif;
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
@@ -102,7 +102,7 @@
 }
 
 .ActionHeaderTitle {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Helvetica', sans-serif;
     font-style: normal;
     font-weight: 700;
     font-size: 32px;
@@ -112,7 +112,7 @@
 }
 
 .ActionHeaderSubTitle{
-    font-family: 'Space Grotesk', sans-serif;;
+    font-family: 'Helvetica', sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -149,7 +149,7 @@
 .ActionLabelTitle {
     height: 22px;
     margin: 8px 4px;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Helvetica', sans-serif;
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
@@ -160,13 +160,12 @@
 .ContractAddrInput {
     box-sizing: border-box;
     width: 100%;
-    height: 40px;
+    min-height: 40px;
     background: #FFFFFF;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 12px;
-    flex: none;
-    order: 1;
-    padding: 10px 20px;
+    padding: 0px 16px;
+    font-family: 'Helvetica', sans-serif;
 }
 
 .AlertNotOwner {
@@ -187,7 +186,7 @@
 }
 
 .AlertNotOwnerText {
-    font-family: 'Space Grotesk', sans-serif;;
+    font-family: 'Helvetica', sans-serif;;
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
@@ -222,7 +221,7 @@
 .RoyaltyAddrLabel {
     min-width: 140px;
     height: 22px;
-    font-family: 'Space Grotesk', sans-serif;;
+    font-family: 'Helvetica', sans-serif;;
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
@@ -241,7 +240,7 @@
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 12px;
     padding: 10px 20px;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Helvetica', sans-serif;
 }
 
 .RoyaltyPercentageDiv {
@@ -253,7 +252,7 @@
 .RoyaltyPercentLabel {
     width: 100px;
     height: 22px;
-    font-family: 'Space Grotesk', sans-serif;;
+    font-family: 'Helvetica', sans-serif;;
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
@@ -269,7 +268,7 @@
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 12px;
     padding: 10px 20px;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Helvetica', sans-serif;
 }
 
 .SetRoyaltiesButton {
@@ -289,6 +288,9 @@
     align-self: stretch;
     flex-grow: 0;
     cursor: pointer;
+    font-family: 'Helvetica', sans-serif;
+    font-style: normal;
+    font-weight: 700;
 }
 
 .error {
@@ -309,10 +311,13 @@
     order: 0;
     align-self: stretch;
     flex-grow: 0;
+    font-family: 'Helvetica', sans-serif;
+    font-style: normal;
+    font-weight: 700;
 }
 
 .AlertNotOwnerText {
-    font-family: 'Space Grotesk', sans-serif;;
+    font-family: 'Helvetica', sans-serif;
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
