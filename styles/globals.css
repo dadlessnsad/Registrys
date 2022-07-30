@@ -1,12 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk&display=swap');
 @font-face {
-  font-family: 'Helvetica';
+  font-family: Helvetica;
   src: url(../fonts/Helvetica.ttf) format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-  font-family: 'Helvetica-Bold';
+  font-family: Helvetica;
   src: url(../fonts/Helvetica-Bold.ttf) format('truetype');
+  font-weight: 700;
+  font-style: normal;
 }
 
 html,
