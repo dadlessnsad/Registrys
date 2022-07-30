@@ -50,6 +50,7 @@
     font-size: 14px;
     line-height: 20px;
     color: #000000;
+    border: none;
 }
 
 .ConnectedButton {
@@ -284,6 +285,7 @@
     order: 2;
     align-self: stretch;
     flex-grow: 0;
+    border: none;
 }
 
 .Spinner {
