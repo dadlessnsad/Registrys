@@ -16,11 +16,12 @@ function MyApp({ Component, pageProps }) {
     const [provider, setProvider] = useState(null);
     const [account, setAccount] = useState(null);
     const [address, setAddress] = useState(null);
+    const [network, setNetwork] = useState(null);
 
 
     async function getWeb3Modal() {
         const web3modal = new Web3Modal({
-            network: 'rinkeby',
+            network: 'mainnet',
             cacheProvider: false,
             providerOptions: {
                 walletconnect: {
@@ -34,7 +35,7 @@ function MyApp({ Component, pageProps }) {
                     options: {
                         appName: "NFT Embed Royaltys", // Required
                         infuraId:  process.env.NEXT_PUBLIC_INFURA_ID,
-                        chainId: 4, 
+                        chainId: 1, 
                         darkMode: false
                     }
                 }
@@ -43,13 +44,48 @@ function MyApp({ Component, pageProps }) {
         return web3modal
     }
 
+    async function fetchNetwork() {
+        try {
+            if (provider) { 
+                const _provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+                _provider.on("network", (newNetwork, oldNetwork) => {
+                    // When a Provider makes its initial connection, it emits a "network"
+                    // event with a null oldNetwork along with the newNetwork. So, if the
+                    // oldNetwork exists, it represents a changing network
+                    if (oldNetwork) {
+                        window.location.reload();
+                    }
+                },);
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async function switchNetwork() {
+        ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{
+                chainId: "0x1"
+            }]
+        }).then( () => {
+            window.location.reload();
+        }).catch(error => {
+                console.error(error);
+        });
+    }
+
+
+        
     const connect = useCallback(async () => {
         try {
             const web3Modal = await getWeb3Modal()
             const connection = await web3Modal.connect()
             const provider = new ethers.providers.Web3Provider(connection)
             const network = await provider.getNetwork()
+            const _network = network.chainId.toString()
             setProvider(provider)
+            setNetwork(_network)
             const accounts = await provider.listAccounts()
             setAccount(accounts[0])
             const name = await provider.lookupAddress(accounts[0])
@@ -58,13 +94,14 @@ function MyApp({ Component, pageProps }) {
             } else {
                 setAddress(accounts[0].substring(0, 6) + "..." + accounts[0].substring(36)); 
             }
+            setNetwork(_network)
         }   catch (err) {
             console.error(err);
+            setNetwork(null);
         }
-
     }, []);
 
-
+    console.log("network", network)
     async function logout(){
         setAccount(null);
         setTimeout(() => {
@@ -72,9 +109,22 @@ function MyApp({ Component, pageProps }) {
         }, 1);
     }
 
+    useEffect(() => {
+        fetchNetwork();
+    })
     
     return (
         <div className={styles.container}>
+            {network != 1 && provider && (
+                <div className={styles.error}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10.3125 16.5H10.875V10.875H10.3125C10.0019 10.875 9.75 10.6231 9.75 10.3125V9.9375C9.75 9.62686 10.0019 9.375 10.3125 9.375H12.5625C12.8731 9.375 13.125 9.62686 13.125 9.9375V16.5H13.6875C13.9981 16.5 14.25 16.7519 14.25 17.0625V17.4375C14.25 17.7481 13.9981 18 13.6875 18H10.3125C10.0019 18 9.75 17.7481 9.75 17.4375V17.0625C9.75 16.7519 10.0019 16.5 10.3125 16.5ZM12 5.25C11.1716 5.25 10.5 5.92158 10.5 6.75C10.5 7.57842 11.1716 8.25 12 8.25C12.8284 8.25 13.5 7.57842 13.5 6.75C13.5 5.92158 12.8284 5.25 12 5.25Z" fill="#4D66EB"/>
+                            <path fillRule="evenodd" clipRule="evenodd" d="M12.0008 23.2008C18.1864 23.2008 23.2008 18.1864 23.2008 12.0008C23.2008 5.81519 18.1864 0.800781 12.0008 0.800781C5.81519 0.800781 0.800781 5.81519 0.800781 12.0008C0.800781 18.1864 5.81519 23.2008 12.0008 23.2008Z" stroke="#4D66EB" strokeWidth="1.5" strokeLinecap="round"/>
+                        </svg>
+                    <p>Please connect to the mainnet</p>
+                    <button onClick={switchNetwork}>Switch Network</button>
+                </div>
+            )}
             <header className={styles.Header}>
                 <div className={styles.HeaderDiv}>
                     <svg width="135" height="20" viewBox="0 0 135 20" fill="none" xmlns="http://www.w3.org/2000/svg">

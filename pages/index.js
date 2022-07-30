@@ -6,7 +6,7 @@ import IERC721 from '../contracts/IERC721A.json'
 import axios from 'axios'
 import { ethers } from 'ethers'
 import { AccountContext, ProviderContext, AddressContext } from '../context'
-import EmbedAddress from '../config'
+import { TransparentUpgradeableProxy, RoyaltyRegistryImplementation} from '../config'
 import { AddEthereumChainResponse } from '@coinbase/wallet-sdk/dist/relay/Web3Response'
 
 export default function Home() {
@@ -25,8 +25,8 @@ export default function Home() {
 
     const ETHERSCAN_KEY = process.env.NEXT_PUBLIC_ETHERSCAN_KEY
 
-    const url = `https://api-rinkeby.etherscan.io/api?module=contract&action=getabi&address=${inputContract}&apikey=${ETHERSCAN_KEY}`
-    const registry = `https://api-rinkeby.etherscan.io/api?module=contract&action=getabi&address=0x6bf18b8564814a2118548D9DD2e54Ff46f0343AE&apikey=KRE9VVJMXIP4ZEVEZSWDZET7NH73KQ4BDQ`
+    const url = `https://api.etherscan.io/api?module=contract&action=getabi&address=${inputContract}&apikey=KRE9VVJMXIP4ZEVEZSWDZET7NH73KQ4BDQ`
+    const registry = `https://api.etherscan.io/api?module=contract&action=getabi&address=${RoyaltyRegistryImplementation}&apikey=KRE9VVJMXIP4ZEVEZSWDZET7NH73KQ4BDQ`
 
 
     const getContractOwner = useCallback(async () => {
@@ -48,7 +48,6 @@ export default function Home() {
 
     }, [account, provider, validContract, inputContract, url])
 
-
     async function handleSubmit() {
         try {
             // setRoyaltiesByTokenAndTokenId
@@ -57,15 +56,14 @@ export default function Home() {
                 const res = await axios.get(registry)
                 const _abi = await JSON.parse(res.data.result);
                 const signer = provider.getSigner();
-                const _registry = new ethers.Contract('0x6bf18b8564814a2118548D9DD2e54Ff46f0343AE', _abi, signer);
+                const _registry = new ethers.Contract(TransparentUpgradeableProxy, _abi, signer);
                 const setPercentage = newRoyaltyCut * 100;
-                const data = [newReceiverAddr, setPercentage];
                 const royaltiesByTokenAndTokenId = await _registry.setRoyaltiesByToken(
                     inputContract,
                     [[newReceiverAddr, setPercentage]],
                 );
                 royaltiesByTokenAndTokenId.wait
-                    setLoading(false)
+                setLoading(false)
                 
             }
         } catch(err) {
