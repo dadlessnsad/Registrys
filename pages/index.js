@@ -186,7 +186,7 @@ export default function Home() {
                                     onChange={(e) => setNewReceiverAddr(e.target.value)}
                                 />
                             </div>
-                            <div className={styles.RoyaltyPercentDiv}>
+                            <div className={styles.RoyaltyCutDiv}>
                                 <label className={styles.RoyaltyAddrLabel} >Royalty Percent</label>
                                 <input 
                                     className={styles.RoyaltyPercentInput} 
