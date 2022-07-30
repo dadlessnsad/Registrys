@@ -7,7 +7,7 @@ import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
-import { ProviderContext, AccountContext, AddressContext} from '../context.js'
+import { ProviderContext, AccountContext, AddressContext, NetworkContext} from '../context.js'
 import { EmbedAddress } from '../config'
 
 
@@ -158,7 +158,9 @@ function MyApp({ Component, pageProps }) {
             <ProviderContext.Provider value={provider}>
                 <AccountContext.Provider value={account}>
                     <AddressContext.Provider value={address}>
-                        <Component {...pageProps} />
+                        <NetworkContext.Provider value={network}>
+                            <Component {...pageProps} />
+                        </NetworkContext.Provider>
                     </AddressContext.Provider>
                 </AccountContext.Provider>
             </ProviderContext.Provider>
