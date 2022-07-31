@@ -18,7 +18,7 @@ export default function Home() {
     const [newReceiverAddr, setNewReceiverAddr] = useState('');
     const [newRoyaltyCut, setNewRoyaltyCut] = useState(`0%`);
     const [currentRoyaltiesAddr, setCurrentRoyaltiesAddr] = useState([])
-    const [currentRoyaltiesValue, setCurrentRoyaltiesValue] = useState([])
+    const [currentRoyaltiesValue, setCurrentRoyaltiesValue] = useState([0])
     const [contractOwner, setContractOwner] = useState('');
     const [registryAbi, setRegistryAbi] = useState();
     const [isOwner, setIsOwner] = useState(null);
@@ -189,9 +189,9 @@ export default function Home() {
                                     <path fillRule="evenodd" clipRule="evenodd" d="M12.0008 23.2008C18.1864 23.2008 23.2008 18.1864 23.2008 12.0008C23.2008 5.81519 18.1864 0.800781 12.0008 0.800781C5.81519 0.800781 0.800781 5.81519 0.800781 12.0008C0.800781 18.1864 5.81519 23.2008 12.0008 23.2008Z" stroke="#4D66EB" strokeWidth="1.5" strokeLinecap="round"/>
                                 </svg>
                                 <p className={styles.AlertNotOwnerTextRoyalties}>
-                                    Current royalties:  {currentRoyaltiesValue}% 
+                                    {currentRoyaltiesValue != 0 ? `Current royalties: ${currentRoyaltiesValue}%` : `No current royalties for this collection`}
                                     <a href={`${etherscanAddrUrl} + ${currentRoyaltiesAddr}`} className={styles.AlertNotOwnerTextRoyalties}>
-                                        to: {currentRoyaltiesAddr}
+                                        {currentRoyaltiesAddr != '' ? `to: ${currentRoyaltiesAddr}` : ''}
                                     </a>
                                 </p>
                             </div>
