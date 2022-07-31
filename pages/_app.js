@@ -4,11 +4,14 @@ import React,{ useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ethers } from 'ethers'
+import Blockies from 'react-blockies';
 import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
 import { ProviderContext, AccountContext, AddressContext, NetworkContext} from '../context.js'
 import { EmbedAddress } from '../config'
+
+const INFURA_ID = process.env.NEXT_PUBLIC_INFURA_ID;
 
 
 function MyApp({ Component, pageProps }) {
@@ -27,14 +30,14 @@ function MyApp({ Component, pageProps }) {
                 walletconnect: {
                     package: WalletConnectProvider,
                     options: { 
-                        infuraId: process.env.NEXT_PUBLIC_INFURA_ID
+                        infuraId: INFURA_ID
                     },
                 },
                 coinbasewallet: {
                     package: CoinbaseWalletSDK, // Required
                     options: {
-                        appName: "NFT Embed Royaltys", // Required
-                        infuraId:  process.env.NEXT_PUBLIC_INFURA_ID,
+                        appName: "NFT Embed Royalties", // Required
+                        infuraId:  INFURA_ID,
                         chainId: 1, 
                         darkMode: false
                     }
@@ -101,7 +104,6 @@ function MyApp({ Component, pageProps }) {
         }
     }, []);
 
-    console.log("network", network)
     async function logout(){
         setAccount(null);
         setTimeout(() => {
@@ -117,12 +119,10 @@ function MyApp({ Component, pageProps }) {
         <div className={styles.container}>
             {network != 1 && provider && (
                 <div className={styles.error}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10.3125 16.5H10.875V10.875H10.3125C10.0019 10.875 9.75 10.6231 9.75 10.3125V9.9375C9.75 9.62686 10.0019 9.375 10.3125 9.375H12.5625C12.8731 9.375 13.125 9.62686 13.125 9.9375V16.5H13.6875C13.9981 16.5 14.25 16.7519 14.25 17.0625V17.4375C14.25 17.7481 13.9981 18 13.6875 18H10.3125C10.0019 18 9.75 17.7481 9.75 17.4375V17.0625C9.75 16.7519 10.0019 16.5 10.3125 16.5ZM12 5.25C11.1716 5.25 10.5 5.92158 10.5 6.75C10.5 7.57842 11.1716 8.25 12 8.25C12.8284 8.25 13.5 7.57842 13.5 6.75C13.5 5.92158 12.8284 5.25 12 5.25Z" fill="#4D66EB"/>
-                            <path fillRule="evenodd" clipRule="evenodd" d="M12.0008 23.2008C18.1864 23.2008 23.2008 18.1864 23.2008 12.0008C23.2008 5.81519 18.1864 0.800781 12.0008 0.800781C5.81519 0.800781 0.800781 5.81519 0.800781 12.0008C0.800781 18.1864 5.81519 23.2008 12.0008 23.2008Z" stroke="#4D66EB" strokeWidth="1.5" strokeLinecap="round"/>
-                        </svg>
-                    <p>Please connect to the mainnet</p>
-                    <button onClick={switchNetwork}>Switch Network</button>
+                        <Image src="/error.webp" alt="error" width={100} height={100} />
+                    <p className={styles.errorText}>Please switch your wallet network to Mainnet to use the app.</p>
+                    <p className={styles.errorText}>If you still encounter problems, you may want to switch to a different wallet.</p>
+                    <button className={styles.errorButton} onClick={switchNetwork}>Switch Network</button>
                 </div>
             )}
             <header className={styles.Header}>
@@ -149,8 +149,16 @@ function MyApp({ Component, pageProps }) {
                 <div className={styles.HeaderDiv}>
                     {!account && <button className={styles.ConnectButton} onClick={connect}>Connect Wallet</button>}
                     {account && (
-                        <>
-                            <button className={styles.ConnectedButton} onClick={logout}>{address}</button>
+                        <>  
+                            <button className={styles.ConnectedButton} onClick={logout}>
+                                <Blockies
+                                    className={styles.Blockies}
+                                    seed={account}
+                                    size={6}
+                                    scale={4}
+                                />
+                                {address}
+                            </button>
                         </>
                     )}
                 </div>
