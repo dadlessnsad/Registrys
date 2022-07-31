@@ -17,6 +17,8 @@ export default function Home() {
     const [invalidContract, setInvalidContract] = useState(null);
     const [newReceiverAddr, setNewReceiverAddr] = useState('');
     const [newRoyaltyCut, setNewRoyaltyCut] = useState(`0%`);
+    const [currentRoyaltiesAddr, setCurrentRoyaltiesAddr] = useState([])
+    const [currentRoyaltiesValue, setCurrentRoyaltiesValue] = useState([])
     const [contractOwner, setContractOwner] = useState('');
     const [registryAbi, setRegistryAbi] = useState();
     const [isOwner, setIsOwner] = useState(null);
@@ -30,6 +32,7 @@ export default function Home() {
     const url = `https://api.etherscan.io/api?module=contract&action=getabi&address=${inputContract}&apikey=KRE9VVJMXIP4ZEVEZSWDZET7NH73KQ4BDQ`
     const registry = `https://api.etherscan.io/api?module=contract&action=getabi&address=${RoyaltyRegistryImplementation}&apikey=KRE9VVJMXIP4ZEVEZSWDZET7NH73KQ4BDQ`
 
+    console.log("Current Royalties: ", currentRoyaltiesValue.toString())
 
     const getContractOwner = useCallback(async () => {
         if(validContract == true) {
@@ -58,28 +61,51 @@ export default function Home() {
     }, [account, provider, validContract, inputContract, url])
 
     const getExistingRoyalties = useCallback(async () => {
-        if(validContract == true) {
+        if(validContract == true && isOwner) {
+            try{
                 setLoadingContractOwner(true)
+                const res = await axios.get(registry)
+                const _abi = await JSON.parse(res.data.result);
+                const _registry = new ethers.Contract(TransparentUpgradeableProxy, _abi, provider);
+                const [data] = await _registry.readCollectionRoyalties(inputContract);
+                const [royaltiesAddr, royaltiesValue] = data;
+                let addr = royaltiesAddr.substring(0, 6) + "..." + royaltiesAddr.substring(36)
+                let val = royaltiesValue / 100
+                setCurrentRoyaltiesAddr(addr);
+                setCurrentRoyaltiesValue(val);
+                setLoadingContractOwner(false)
+            } catch(e) {
+                console.log(e)
+                setLoadingContractOwner(false)
+            }
         }
-    } , [validContract])
+    } , [provider, validContract, registry, inputContract, isOwner])
 
     async function handleSubmit() {
         try {
             // setRoyaltiesByTokenAndTokenId
             if(provider && validContract == true) {
-                setLoading(true)
-                const res = await axios.get(registry)
-                const _abi = await JSON.parse(res.data.result);
-                const signer = provider.getSigner();
-                const _registry = new ethers.Contract(TransparentUpgradeableProxy, _abi, signer);
-                const setPercentage = newRoyaltyCut * 100;
-                const royaltiesByTokenAndTokenId = await _registry.setRoyaltiesByToken(
-                    inputContract,
-                    [[newReceiverAddr, setPercentage]],
-                );
-                royaltiesByTokenAndTokenId.wait
-                setLoading(false)
-                
+                try {
+                    setLoading(true)
+                    const res = await axios.get(registry)
+                    const _abi = await JSON.parse(res.data.result);
+                    const signer = provider.getSigner();
+                    const _registry = new ethers.Contract(TransparentUpgradeableProxy, _abi, signer);
+                    const setPercentage = newRoyaltyCut * 100;
+                    console.log(setPercentage)
+                    const royaltiesByTokenAndTokenId = await _registry.setRoyaltiesByToken(
+                        inputContract,
+                        [[newReceiverAddr, setPercentage]],
+                    );
+                    royaltiesByTokenAndTokenId.wait().then(() => {
+                        //update royalties
+                        getExistingRoyalties()
+                        setLoading(false)
+                    })
+                } catch(e) {
+                    console.log(e)
+                    setLoading(false)
+                }
             }
         } catch(err) {
             console.error(err)
@@ -97,17 +123,17 @@ export default function Home() {
             setValidContract(null)
             setIsOwner(false)
         }
-
-
         if(validContract) {
             getContractOwner()
-
+        }
+        if(validContract && isOwner) {
+            getExistingRoyalties()
         }
         const interval = setInterval(() => {
 
         }, 500);
         return () => clearInterval(interval);
-    }, [provider, inputContract, validContract, getContractOwner, account, newRoyaltyCut])
+    }, [provider, inputContract, validContract, getContractOwner, account, newRoyaltyCut, isOwner, getExistingRoyalties])
 
     return (
         <div className={styles.container}>
@@ -159,6 +185,23 @@ export default function Home() {
                                 <p className={styles.AlertNotOwnerText}>You dont own this collection</p>
                             </div>
                         )}
+                        {!loadingContractOwner && validContract && isOwner && !invalidContract && (
+                            <div className={styles.AlertNotOwnerRoyalties}>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.3125 16.5H10.875V10.875H10.3125C10.0019 10.875 9.75 10.6231 9.75 10.3125V9.9375C9.75 9.62686 10.0019 9.375 10.3125 9.375H12.5625C12.8731 9.375 13.125 9.62686 13.125 9.9375V16.5H13.6875C13.9981 16.5 14.25 16.7519 14.25 17.0625V17.4375C14.25 17.7481 13.9981 18 13.6875 18H10.3125C10.0019 18 9.75 17.7481 9.75 17.4375V17.0625C9.75 16.7519 10.0019 16.5 10.3125 16.5ZM12 5.25C11.1716 5.25 10.5 5.92158 10.5 6.75C10.5 7.57842 11.1716 8.25 12 8.25C12.8284 8.25 13.5 7.57842 13.5 6.75C13.5 5.92158 12.8284 5.25 12 5.25Z" fill="#4D66EB"/>
+                                    <path fillRule="evenodd" clipRule="evenodd" d="M12.0008 23.2008C18.1864 23.2008 23.2008 18.1864 23.2008 12.0008C23.2008 5.81519 18.1864 0.800781 12.0008 0.800781C5.81519 0.800781 0.800781 5.81519 0.800781 12.0008C0.800781 18.1864 5.81519 23.2008 12.0008 23.2008Z" stroke="#4D66EB" strokeWidth="1.5" strokeLinecap="round"/>
+                                </svg>
+                                <p className={styles.AlertNotOwnerTextRoyalties}>
+                                    Current royalties:
+                                    <p className={styles.AlertNotOwnerTextRoyalties}>
+                                        to: {currentRoyaltiesAddr},  
+                                    </p>
+                                    <p className={styles.AlertNotOwnerTextRoyalties}>
+                                        amount: {currentRoyaltiesValue}% 
+                                    </p>
+                                </p>
+                            </div>
+                        )}
                         {loadingContractOwner && validContract && isOwner == false && network == 1 &&(
                             <div className={styles.AlertNotOwner}>
                                 <p className={styles.AlertNotOwnerText}>... Processing ...</p>
@@ -170,7 +213,7 @@ export default function Home() {
                                     <path d="M10.3125 16.5H10.875V10.875H10.3125C10.0019 10.875 9.75 10.6231 9.75 10.3125V9.9375C9.75 9.62686 10.0019 9.375 10.3125 9.375H12.5625C12.8731 9.375 13.125 9.62686 13.125 9.9375V16.5H13.6875C13.9981 16.5 14.25 16.7519 14.25 17.0625V17.4375C14.25 17.7481 13.9981 18 13.6875 18H10.3125C10.0019 18 9.75 17.7481 9.75 17.4375V17.0625C9.75 16.7519 10.0019 16.5 10.3125 16.5ZM12 5.25C11.1716 5.25 10.5 5.92158 10.5 6.75C10.5 7.57842 11.1716 8.25 12 8.25C12.8284 8.25 13.5 7.57842 13.5 6.75C13.5 5.92158 12.8284 5.25 12 5.25Z" fill="#4D66EB"/>
                                     <path fillRule="evenodd" clipRule="evenodd" d="M12.0008 23.2008C18.1864 23.2008 23.2008 18.1864 23.2008 12.0008C23.2008 5.81519 18.1864 0.800781 12.0008 0.800781C5.81519 0.800781 0.800781 5.81519 0.800781 12.0008C0.800781 18.1864 5.81519 23.2008 12.0008 23.2008Z" stroke="#4D66EB" strokeWidth="1.5" strokeLinecap="round"/>
                                 </svg>
-                                <p className={styles.AlertNotOwnerText}>Cant find address source code</p>
+                                <p className={styles.AlertNotOwnerText}>Cant find verified source code</p>
                             </div>
                         )}
                         <div className={styles.RoyaltyDiv}>
@@ -204,7 +247,7 @@ export default function Home() {
                         </div>
                         {!loading && (    
                             <button 
-                                disabled={isOwner != true || !newReceiverAddr || !newRoyaltyCut || !provider || !invalidContract}
+                                disabled={isOwner != true || !newReceiverAddr || !newRoyaltyCut || !provider }
                                 className={styles.SetRoyaltiesButton}
                                 onClick={handleSubmit}
                             >
