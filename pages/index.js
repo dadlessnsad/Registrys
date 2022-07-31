@@ -191,7 +191,7 @@ export default function Home() {
                                 <p className={styles.AlertNotOwnerTextRoyalties}>
                                     Current royalties:  {currentRoyaltiesValue}% 
                                     <a href={`${etherscanAddrUrl} + ${currentRoyaltiesAddr}`} className={styles.AlertNotOwnerTextRoyalties}>
-                                        to: {currentRoyaltiesAddr},  
+                                        to: {currentRoyaltiesAddr}
                                     </a>
                                 </p>
                             </div>
