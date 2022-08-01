@@ -144,11 +144,8 @@ export default function Home() {
                 <div className={styles.ActionFrame}>
                     <div className={styles.ActionFrameHeader}>
                         <h1 className={styles.ActionHeaderTitle}>
-                            Royalties
-                        </h1>
-                        <p className={styles.ActionHeaderSubTitle}>
                             Set the creator royalties for your NFT with ease
-                        </p>
+                        </h1>
                     </div>
                     <div className={styles.ActionFrameBody}> 
                         <div className={styles.ActionFrameContractDiv}>
