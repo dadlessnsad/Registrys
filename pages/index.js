@@ -15,6 +15,7 @@ export default function Home() {
     const [inputContract, setInputContract] = useState('');
     const [validContract, setValidContract] = useState(null);
     const [invalidContract, setInvalidContract] = useState(null);
+    const [validAddress, setValidAddress] = useState(false);
     const [newReceiverAddr, setNewReceiverAddr] = useState('');
     const [newRoyaltyCut, setNewRoyaltyCut] = useState(`0%`);
     const [currentRoyaltiesAddr, setCurrentRoyaltiesAddr] = useState([])
@@ -28,7 +29,6 @@ export default function Home() {
     const network = useContext(NetworkContext)
 
     const ETHERSCAN_KEY = process.env.NEXT_PUBLIC_ETHERSCAN_KEY
-    const etherscanAddrUrl = `https://etherscan.io/address/`
     const url = `https://api.etherscan.io/api?module=contract&action=getabi&address=${inputContract}&apikey=KRE9VVJMXIP4ZEVEZSWDZET7NH73KQ4BDQ`
     const registry = `https://api.etherscan.io/api?module=contract&action=getabi&address=${RoyaltyRegistryImplementation}&apikey=KRE9VVJMXIP4ZEVEZSWDZET7NH73KQ4BDQ`
 
@@ -112,6 +112,9 @@ export default function Home() {
         }
     }
 
+    console.log('valid addr: ', validAddress)
+    console.log('new addr: ', newReceiverAddr)
+
     useEffect(() => {
         if(provider && inputContract != '') {
             const isValid = ethers.utils.isAddress(inputContract);
@@ -120,17 +123,25 @@ export default function Home() {
             setValidContract(null)
             setIsOwner(false)
         }
+        //inputContract != '' && isOwner
+        if(provider && inputContract != '' && newReceiverAddr != '') {
+            const _addr = ethers.utils.isAddress(newReceiverAddr);
+            setValidAddress(_addr)
+        }
+
         if(validContract) {
             getContractOwner()
         }
+
         if(validContract && isOwner) {
             getExistingRoyalties()
+            
         }
         const interval = setInterval(() => {
 
         }, 500);
         return () => clearInterval(interval);
-    }, [provider, inputContract, validContract, getContractOwner, account, newRoyaltyCut, isOwner, getExistingRoyalties])
+    }, [provider, inputContract, validContract, getContractOwner, account, newRoyaltyCut, isOwner, getExistingRoyalties, newReceiverAddr, validAddress])
 
     return (
         <div className={styles.container}>
@@ -144,10 +155,10 @@ export default function Home() {
                 <div className={styles.ActionFrame}>
                     <div className={styles.ActionFrameHeader}>
                         <h1 className={styles.ActionHeaderTitle}>
-                            Set the creator royalties for your NFT with ease
+                            Set the creator royalties with ease
                         </h1>
                     </div>
-                    <div className={styles.ActionFrameBody}> 
+                    <form className={styles.ActionFrameBody}> 
                         <div className={styles.ActionFrameContractDiv}>
                             <label className={styles.ActionLabelTitle}>
                                 Collection Address
@@ -159,24 +170,30 @@ export default function Home() {
                                 placeholder="Collection Address" 
                                 value={inputContract}
                                 onChange={(e) => setInputContract(e.target.value)}
+                                loading={loadingContractOwner}
                             />
-                        </div>
-                        {validContract == false && inputContract && (
-                            <div className={styles.AlertNotOwner}>
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M10.3125 16.5H10.875V10.875H10.3125C10.0019 10.875 9.75 10.6231 9.75 10.3125V9.9375C9.75 9.62686 10.0019 9.375 10.3125 9.375H12.5625C12.8731 9.375 13.125 9.62686 13.125 9.9375V16.5H13.6875C13.9981 16.5 14.25 16.7519 14.25 17.0625V17.4375C14.25 17.7481 13.9981 18 13.6875 18H10.3125C10.0019 18 9.75 17.7481 9.75 17.4375V17.0625C9.75 16.7519 10.0019 16.5 10.3125 16.5ZM12 5.25C11.1716 5.25 10.5 5.92158 10.5 6.75C10.5 7.57842 11.1716 8.25 12 8.25C12.8284 8.25 13.5 7.57842 13.5 6.75C13.5 5.92158 12.8284 5.25 12 5.25Z" fill="#4D66EB"/>
-                                    <path fillRule="evenodd" clipRule="evenodd" d="M12.0008 23.2008C18.1864 23.2008 23.2008 18.1864 23.2008 12.0008C23.2008 5.81519 18.1864 0.800781 12.0008 0.800781C5.81519 0.800781 0.800781 5.81519 0.800781 12.0008C0.800781 18.1864 5.81519 23.2008 12.0008 23.2008Z" stroke="#4D66EB" strokeWidth="1.5" strokeLinecap="round"/>
+                            {loadingContractOwner && validContract && isOwner == false && network == 1 && (
+                                <svg className={styles.ContractSpinner} width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17.5 9C17.5 11.2203 16.5955 13.2294 15.1348 14.6788C13.6888 16.1136 11.6979 17 9.5 17C5.08172 17 1.5 13.4183 1.5 9C1.5 4.58172 5.08172 1 9.5 1C13.31 1 16.498 3.66345 17.3035 7.23001" stroke="url(#paint0_angular_3739_24590)" strokeWidth="1.5" strokeLinecap="round"/>
+                                        <defs>
+                                            <radialGradient id="paint0_angular_3739_24590" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"   gradientTransform="translate(9.5 9) rotate(-7.12502) scale(8.06226)">
+                                                <stop stopOpacity="0"/>
+                                                <stop offset="1"/>
+                                            </radialGradient>
+                                        </defs>
                                 </svg>
-                                <p className={styles.AlertNotOwnerText}>Invalid Contract address</p>
-                            </div>
-                        )}
+                            )}
+                            {validContract == false && inputContract != '' &&    
+                                <span className={styles.AlertInvalid}>Invalid Contract address</span>
+                            }
+                        </div>
                         {!loadingContractOwner && validContract && isOwner == false && !invalidContract && (
                             <div className={styles.AlertNotOwner}>
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M10.3125 16.5H10.875V10.875H10.3125C10.0019 10.875 9.75 10.6231 9.75 10.3125V9.9375C9.75 9.62686 10.0019 9.375 10.3125 9.375H12.5625C12.8731 9.375 13.125 9.62686 13.125 9.9375V16.5H13.6875C13.9981 16.5 14.25 16.7519 14.25 17.0625V17.4375C14.25 17.7481 13.9981 18 13.6875 18H10.3125C10.0019 18 9.75 17.7481 9.75 17.4375V17.0625C9.75 16.7519 10.0019 16.5 10.3125 16.5ZM12 5.25C11.1716 5.25 10.5 5.92158 10.5 6.75C10.5 7.57842 11.1716 8.25 12 8.25C12.8284 8.25 13.5 7.57842 13.5 6.75C13.5 5.92158 12.8284 5.25 12 5.25Z" fill="#4D66EB"/>
                                     <path fillRule="evenodd" clipRule="evenodd" d="M12.0008 23.2008C18.1864 23.2008 23.2008 18.1864 23.2008 12.0008C23.2008 5.81519 18.1864 0.800781 12.0008 0.800781C5.81519 0.800781 0.800781 5.81519 0.800781 12.0008C0.800781 18.1864 5.81519 23.2008 12.0008 23.2008Z" stroke="#4D66EB" strokeWidth="1.5" strokeLinecap="round"/>
                                 </svg>
-                                <p className={styles.AlertNotOwnerText}>You dont own this collection</p>
+                                <p className={styles.AlertNotOwnerText}>You don't own this collection</p>
                             </div>
                         )}
                         {!loadingContractOwner && validContract && isOwner && !invalidContract && (
@@ -186,16 +203,8 @@ export default function Home() {
                                     <path fillRule="evenodd" clipRule="evenodd" d="M12.0008 23.2008C18.1864 23.2008 23.2008 18.1864 23.2008 12.0008C23.2008 5.81519 18.1864 0.800781 12.0008 0.800781C5.81519 0.800781 0.800781 5.81519 0.800781 12.0008C0.800781 18.1864 5.81519 23.2008 12.0008 23.2008Z" stroke="#4D66EB" strokeWidth="1.5" strokeLinecap="round"/>
                                 </svg>
                                 <p className={styles.AlertNotOwnerTextRoyalties}>
-                                    {currentRoyaltiesValue != 0 ? `Current royalties: ${currentRoyaltiesValue}%` : `No current royalties for this collection`}
-                                    <a href={`${etherscanAddrUrl} + ${currentRoyaltiesAddr}`} className={styles.AlertNotOwnerTextRoyalties}>
-                                        {currentRoyaltiesAddr != '' ? `to: ${currentRoyaltiesAddr}` : ''}
-                                    </a>
+                                    {currentRoyaltiesValue != 0 ? `A Royalty is already set for this collection: ${currentRoyaltiesValue}%` : `No current royalties for this collection`}
                                 </p>
-                            </div>
-                        )}
-                        {loadingContractOwner && validContract && isOwner == false && network == 1 &&(
-                            <div className={styles.AlertNotOwner}>
-                                <p className={styles.AlertNotOwnerText}>... Processing ...</p>
                             </div>
                         )}
                         {!loadingContractOwner && validContract && isOwner == false && network == 1 && invalidContract &&(
@@ -219,6 +228,7 @@ export default function Home() {
                                     value={newReceiverAddr}
                                     onChange={(e) => setNewReceiverAddr(e.target.value)}
                                 />
+                                {!validAddress && newReceiverAddr != '' && <span className={styles.AlertInvalidAddress}>Invalid address or ENS name</span>}
                             </div>
                             <div className={styles.RoyaltyCutDiv}>
                                 <label className={styles.RoyaltyAddrLabel} >Royalty Percent</label>
@@ -233,7 +243,7 @@ export default function Home() {
                                     value={newRoyaltyCut} 
                                     onChange={(e) => setNewRoyaltyCut(e.target.value)}
                                 />
-                                
+                                    {newRoyaltyCut > 20 && <span className={styles.AlertInvalidAddress}>20% max.</span>}
                             </div>
                         </div>
                         {!loading && (    
@@ -262,7 +272,7 @@ export default function Home() {
                                 Setting up royalties...
                             </button>
                         )}
-                    </div>
+                    </form>
                 </div>
             </main>
 

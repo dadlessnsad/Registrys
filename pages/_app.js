@@ -14,6 +14,7 @@ import axios from 'axios'
 
 const INFURA_ID = process.env.NEXT_PUBLIC_INFURA_ID;
 const wETHAddr = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
+const etherscanAddrUrl = `https://etherscan.io/address/`
 
 function MyApp({ Component, pageProps }) {
 
@@ -62,14 +63,14 @@ function MyApp({ Component, pageProps }) {
                 let data = (await res).data.result
                 let balance = ethers.utils.formatEther(data)
                 setEthBalance(parseFloat(balance.toString()).toFixed(2))
-                const wethRes = axios.get(
-                    `https://api.etherscan.io/api?module=contract&action=getabi&address=0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2&apikey=KRE9VVJMXIP4ZEVEZSWDZET7NH73KQ4BDQ`
-                )
-                let wethAbi = (await wethRes).data.result
-                const contract = new ethers.Contract(wETHAddr, wethAbi, provider);
-                const wethBalance = await contract.balanceOf(account)
-                let wdata = ethers.utils.formatEther(wethBalance)
-                setWethBalance(parseFloat(wdata.toString()).toFixed(2))
+                // const wethRes = axios.get(
+                //     `https://api.etherscan.io/api?module=contract&action=getabi&address=0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2&apikey=KRE9VVJMXIP4ZEVEZSWDZET7NH73KQ4BDQ`
+                // )
+                // let wethAbi = (await wethRes).data.result
+                // const contract = new ethers.Contract(wETHAddr, wethAbi, provider);
+                // const wethBalance = await contract.balanceOf(account)
+                // let wdata = ethers.utils.formatEther(wethBalance)
+                // setWethBalance(parseFloat(wdata.toString()).toFixed(2))
 
 
             } catch (error) {
@@ -163,7 +164,7 @@ function MyApp({ Component, pageProps }) {
                     <div className={styles.dropdownHeader}> 
                         <h1 className={styles.dropdownTitle}>
                             <Blockies className={styles.dropdownBlockie} seed={account} size={8} scale={4} />
-                            <a href={`https://etherscan.io/address/${account}`} target='_blank' rel='noreferrer' className={styles.dropdownAddress}>{address}</a>
+                            <a href={`${etherscanAddrUrl}${account}`} target='_blank' rel='noreferrer' className={styles.dropdownAddress}>{address}</a>
                         </h1>
                     </div>
                     <div className={styles.dropdownBody}>
@@ -192,25 +193,7 @@ function MyApp({ Component, pageProps }) {
                         </div>
 
                         <span className={styles.ethBalance}>{ethBalance}</span>
-                    </div>
-                    <div className={styles.dropdownBodyCtn}>
-                        <div className={styles.dropdownBodyFirst}>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="12" cy="12" r="12" fill="#627EEA"/>
-                                <path d="M11.9317 3.11914L11.8125 3.52391V15.2683L11.9317 15.3872L17.3832 12.1647L11.9317 3.11914Z" fill="#C0CBF6"/>
-                                <path d="M11.9321 3.11914L6.48047 12.1647L11.9321 15.3872V9.68678V3.11914Z" fill="white"/>
-                                <path d="M11.9343 16.418L11.8672 16.4999V20.6834L11.9343 20.8795L17.3892 13.1973L11.9343 16.418Z" fill="#C0CBF6"/>
-                                <path d="M11.9321 20.8795V16.418L6.48047 13.1973L11.9321 20.8795Z" fill="white"/>
-                                <path d="M11.9297 15.3898L17.3812 12.1674L11.9297 9.68945V15.3898Z" fill="#8197EE"/>
-                                <path d="M6.48047 12.1674L11.9321 15.3898V9.68945L6.48047 12.1674Z" fill="#C0CBF6"/>
-                            </svg>
-                            <p className={styles.ethBalance}>
-                                wETH
-                            </p>
-                        </div>
-                        <span className={styles.ethBalance}>{wethBalance}</span>
-                    </div>
-                        
+                    </div>                        
                         <button className={styles.logoutButton} onClick={logout}>Disconnect</button>
                     </div>
                 </div>
