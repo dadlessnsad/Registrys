@@ -22,10 +22,11 @@ function MyApp({ Component, pageProps }) {
     const [account, setAccount] = useState(null);
     const [address, setAddress] = useState(null);
     const [network, setNetwork] = useState(null);
+    const [networkModalOpen, setNetworkModalOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [ethBalance, setEthBalance] = useState(null);
-    const [wethBalance, setWethBalance] = useState(null);
+    const [ethBalance, setEthBalance] = useState(0);
     const toggle = () => setDropdownOpen(!dropdownOpen);
+    const toggleError = () => setNetworkModalOpen(!networkModalOpen);
 
     console.log(dropdownOpen)
     console.log(ethBalance)
@@ -130,6 +131,9 @@ function MyApp({ Component, pageProps }) {
                 setAddress(accounts[0].substring(0, 6) + "..." + accounts[0].substring(36)); 
             }
             setNetwork(_network)
+            if(network != 1) {
+                setNetworkModalOpen(true)
+            }
         }   catch (err) {
             console.error(err);
             setNetwork(null);
@@ -150,12 +154,15 @@ function MyApp({ Component, pageProps }) {
     
     return (
         <div className={styles.container}>
-            {network != 1 && provider && (
+            {network != 1 && provider && networkModalOpen &&(
                 <div className={styles.Backdrop}>
-                    <div className={styles.errorBody}>
+                    <div className={styles.TxSuccessBody}>
                             <Image src="/error.webp" alt="error" width={100} height={100} />
                         <p className={styles.errorText}>Please switch your wallet network to <strong>Mainnet</strong> to use the app. If you still encounter problems, you may want to switch to a different wallet.</p>
                         <button className={styles.errorButton} onClick={switchNetwork}>Switch Network</button>
+                        <div className={styles.closeButtonDiv}>
+                            <Image className={styles.closeButton} onClick={toggleError} src="/CloseButton.webp" alt="close" width={100} height={100}/>
+                        </div>
                     </div>
                 </div>
             )}
@@ -170,7 +177,8 @@ function MyApp({ Component, pageProps }) {
                     <div className={styles.dropdownBody}>
                     <div className={styles.dropdownBodyCtn}>
                     <div className={styles.dropdownBodyFirst}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg 
+                            width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="12" cy="12" r="12" fill="white"/>
                             <circle cx="12" cy="12" r="11.75" stroke="black" strokeOpacity="0.1" strokeWidth="0.5"/>
                             <g clipPath="url(#clip0_3883_30545)">
@@ -206,7 +214,9 @@ function MyApp({ Component, pageProps }) {
                         rel="noopener noreferrer"
                         className={styles.BackToHomeText}
                     >
-                        <svg width="135" height="20" viewBox="0 0 135 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg 
+                            className={styles.logo}
+                            width="135" height="20" viewBox="0 0 135 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M6 6L2 10L6 14" stroke="#18181B" strokeWidth="2.6" strokeLinecap="round" stroke-Linejoin="round"/>
                             <rect x="11.3" y="1.3" width="17.4" height="17.4" rx="2.7" stroke="#18181B" strokeWidth="2.6"/>
                             <path d="M34 14L38 10L34 6" stroke="#18181B" strokeWidth="2.6" strokeLinecap="round" stroke-Linejoin="round"/>
@@ -214,7 +224,7 @@ function MyApp({ Component, pageProps }) {
                         />
                         </svg>                 
                     </a>
-                    <p>Royalties</p>
+                    <p className={styles.headerText}>Royalties</p>
                 </div>
                 <div className={styles.HeaderDiv}>
                     {!account && <button className={styles.ConnectButton} onClick={connect}>Connect Wallet</button>}

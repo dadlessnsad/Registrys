@@ -7,7 +7,6 @@ import axios from 'axios'
 import { ethers } from 'ethers'
 import { AccountContext, ProviderContext, AddressContext, NetworkContext} from '../context'
 import { TransparentUpgradeableProxy, RoyaltyRegistryImplementation} from '../config'
-import { AddEthereumChainResponse } from '@coinbase/wallet-sdk/dist/relay/Web3Response'
 
 export default function Home() {
     const [loading, setLoading] = useState(false)
@@ -23,15 +22,22 @@ export default function Home() {
     const [contractOwner, setContractOwner] = useState('');
     const [registryAbi, setRegistryAbi] = useState();
     const [isOwner, setIsOwner] = useState(null);
+    const [txSuccess, setTxSuccess] = useState(false);
+    const [txError, setTxError] = useState(false);
     const account = useContext(AccountContext)
     const provider = useContext(ProviderContext)
     const address = useContext(AddressContext)
     const network = useContext(NetworkContext)
+    
+    const toggle = () => setTxSuccess(!txSuccess);
+    const toggleError = () => setTxError(!txError);
 
     const ETHERSCAN_KEY = process.env.NEXT_PUBLIC_ETHERSCAN_KEY
     const url = `https://api.etherscan.io/api?module=contract&action=getabi&address=${inputContract}&apikey=KRE9VVJMXIP4ZEVEZSWDZET7NH73KQ4BDQ`
     const registry = `https://api.etherscan.io/api?module=contract&action=getabi&address=${RoyaltyRegistryImplementation}&apikey=KRE9VVJMXIP4ZEVEZSWDZET7NH73KQ4BDQ`
 
+    console.log("tx Success: ",txSuccess)
+    console.log("tx Error: ",txError)
 
     const getContractOwner = useCallback(async () => {
         if(validContract == true) {
@@ -98,10 +104,12 @@ export default function Home() {
                     royaltiesByTokenAndTokenId.wait().then(() => {
                         //update royalties
                         getExistingRoyalties()
+                        setTxSuccess(true)
                         setLoading(false)
                     })
                 } catch(e) {
                     console.log(e)
+                    setTxError(true)
                     setLoading(false)
                 }
             }
@@ -111,9 +119,6 @@ export default function Home() {
             setLoading(false)
         }
     }
-
-    console.log('valid addr: ', validAddress)
-    console.log('new addr: ', newReceiverAddr)
 
     useEffect(() => {
         if(provider && inputContract != '') {
@@ -159,6 +164,15 @@ export default function Home() {
                         </h1>
                     </div>
                     <form className={styles.ActionFrameBody}> 
+                        {!account && !provider && (
+                            <div className={styles.AlertNotOwner}>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.3125 16.5H10.875V10.875H10.3125C10.0019 10.875 9.75 10.6231 9.75 10.3125V9.9375C9.75 9.62686 10.0019 9.375 10.3125 9.375H12.5625C12.8731 9.375 13.125 9.62686 13.125 9.9375V16.5H13.6875C13.9981 16.5 14.25 16.7519 14.25 17.0625V17.4375C14.25 17.7481 13.9981 18 13.6875 18H10.3125C10.0019 18 9.75 17.7481 9.75 17.4375V17.0625C9.75 16.7519 10.0019 16.5 10.3125 16.5ZM12 5.25C11.1716 5.25 10.5 5.92158 10.5 6.75C10.5 7.57842 11.1716 8.25 12 8.25C12.8284 8.25 13.5 7.57842 13.5 6.75C13.5 5.92158 12.8284 5.25 12 5.25Z" fill="#4D66EB"/>
+                                    <path fillRule="evenodd" clipRule="evenodd" d="M12.0008 23.2008C18.1864 23.2008 23.2008 18.1864 23.2008 12.0008C23.2008 5.81519 18.1864 0.800781 12.0008 0.800781C5.81519 0.800781 0.800781 5.81519 0.800781 12.0008C0.800781 18.1864 5.81519 23.2008 12.0008 23.2008Z" stroke="#4D66EB" strokeWidth="1.5" strokeLinecap="round"/>
+                                </svg>
+                                <p className={styles.AlertNotOwnerText}>Please connect your wallet to use the app.</p>
+                            </div>
+                        )}
                         <div className={styles.ActionFrameContractDiv}>
                             <label className={styles.ActionLabelTitle}>
                                 Collection Address
@@ -228,7 +242,7 @@ export default function Home() {
                                     value={newReceiverAddr}
                                     onChange={(e) => setNewReceiverAddr(e.target.value)}
                                 />
-                                {!validAddress && newReceiverAddr != '' && <span className={styles.AlertInvalidAddress}>Invalid address or ENS name</span>}
+                                {!validAddress && newReceiverAddr != '' && <span className={styles.AlertInvalidAddress}>Invalid address</span>}
                             </div>
                             <div className={styles.RoyaltyCutDiv}>
                                 <label className={styles.RoyaltyAddrLabel} >Royalty Percent</label>
@@ -248,7 +262,7 @@ export default function Home() {
                         </div>
                         {!loading && (    
                             <button 
-                                disabled={isOwner != true || !newReceiverAddr || !newRoyaltyCut || !provider }
+                                disabled={isOwner != true || !newReceiverAddr || !newRoyaltyCut || newRoyaltyCut > 20 || !provider }
                                 className={styles.SetRoyaltiesButton}
                                 onClick={handleSubmit}
                             >
@@ -274,6 +288,32 @@ export default function Home() {
                         )}
                     </form>
                 </div>
+                {!loading && txSuccess == true && (
+                    <div className={styles.Backdrop}>
+                    <div className={styles.TxSuccessBody}>
+                        <Image src="/txSuccess.webp" alt="error" width={100} height={100} />
+                        <h1 className={styles.TxSuccessTitle}><strong>Success</strong></h1>
+                        <p className={styles.TxSuccessText}>Your royalty has been set successfully.</p>
+                        <button className={styles.TxSuccessButton} onClick={toggle}>Close</button>
+                        <div className={styles.closeButtonDiv}>
+                                <Image className={styles.closeButton} onClick={toggleError} src="/CloseButton.webp" alt="close" width={100} height={100}/>
+                        </div>
+                    </div>
+                </div>
+                )}
+                {!loading && txError == true && (
+                    <div className={styles.Backdrop}>
+                        <div className={styles.TxSuccessBody}>
+                            <Image src="/error.webp" alt="error" width={100} height={100} />
+                            <h1 className={styles.TxSuccessTitle}><strong>Transaction failed!</strong></h1>
+                            <p className={styles.TxSuccessText}>Please try again later.</p>
+                            <button className={styles.TxSuccessButton} onClick={toggleError}>Close</button>
+                            <div className={styles.closeButtonDiv}>
+                                <Image className={styles.closeButton} onClick={toggleError} src="/CloseButton.webp" alt="close" width={100} height={100}/>
+                            </div>
+                        </div>
+                    </div>
+                )}  
             </main>
 
             <footer className={styles.footer}>
