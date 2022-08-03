@@ -10,14 +10,15 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
 import { ProviderContext, AccountContext, AddressContext, NetworkContext} from '../context.js'
 import { EmbedAddress } from '../config'
+import Lottie from 'react-lottie';
+import animationData from '../styles/lotties/animation_desktop.json';
+import animationDataMobile from '../styles/lotties/animation_mobile.json';
 import axios from 'axios'
 
 const INFURA_ID = process.env.NEXT_PUBLIC_INFURA_ID;
-const wETHAddr = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
 const etherscanAddrUrl = `https://etherscan.io/address/`
 
 function MyApp({ Component, pageProps }) {
-
     const [provider, setProvider] = useState(null);
     const [account, setAccount] = useState(null);
     const [address, setAddress] = useState(null);
@@ -25,11 +26,32 @@ function MyApp({ Component, pageProps }) {
     const [networkModalOpen, setNetworkModalOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [ethBalance, setEthBalance] = useState(0);
+    const [width, setWidth] = useState(0);
     const toggle = () => setDropdownOpen(!dropdownOpen);
     const toggleError = () => setNetworkModalOpen(!networkModalOpen);
 
-    console.log(dropdownOpen)
-    console.log(ethBalance)
+    const desktopOptions = {
+        loop: true,
+        autoplay: true,
+        animationData: animationData,
+        rendererSettings: {
+            preserveAspectRatio: "xMidYMid slice"
+        }
+    };
+
+    const mobileOptions = {
+        loop: true,
+        autoplay: true,
+        animationData: animationDataMobile,
+        rendererSettings: {
+            preserveAspectRatio: "xMidYMid slice"
+        }
+    }
+
+    function handleWindowSizeChange() {
+        setWidth(window.innerWidth);
+    }
+
     async function getWeb3Modal() {
         const web3modal = new Web3Modal({
             network: 'mainnet',
@@ -54,8 +76,9 @@ function MyApp({ Component, pageProps }) {
         })
         return web3modal
     }
+    console.log(width)
 
-    async function getBalance() {
+    const getBalance = useCallback(async () => {
         if(account && network == 1) {
             try {
                 const res = axios.get(
@@ -78,9 +101,9 @@ function MyApp({ Component, pageProps }) {
                 console.log(error)
             }
         }
-    }
+    }, [account, network])
 
-    async function fetchNetwork() {
+    const fetchNetwork = useCallback(async () => {
         try {
             if (provider) { 
                 const _provider = new ethers.providers.Web3Provider(window.ethereum, "any");
@@ -96,9 +119,9 @@ function MyApp({ Component, pageProps }) {
         } catch (error) {
             console.error(error)
         }
-    }
+    }, [provider])
 
-    async function switchNetwork() {
+    const switchNetwork = useCallback(async () => {
         ethereum.request({
             method: "wallet_switchEthereumChain",
             params: [{
@@ -109,7 +132,7 @@ function MyApp({ Component, pageProps }) {
         }).catch(error => {
                 console.error(error);
         });
-    }
+    }, [])
 
 
         
@@ -150,10 +173,30 @@ function MyApp({ Component, pageProps }) {
     useEffect(() => {
         fetchNetwork();
         getBalance()
-    })
+        handleWindowSizeChange(); 
+        window.addEventListener('resize', handleWindowSizeChange);
+        return () => {
+            window.removeEventListener('resize', handleWindowSizeChange);
+        }
+    }, [fetchNetwork, getBalance])
     
     return (
         <div className={styles.container}>
+            {width > 640 ? 
+                <Lottie 
+                    className={styles.background}
+                    options={desktopOptions}
+                    isStopped={false}
+                    isPaused={false}
+                /> 
+                    : 
+                <Lottie 
+                    options={mobileOptions}
+                    className={styles.backgroundMobile}
+                    isStopped={false}
+                    isPaused={false}
+                />
+            }
             {network != 1 && provider && networkModalOpen &&(
                 <div className={styles.Backdrop}>
                     <div className={styles.TxSuccessBody}>
