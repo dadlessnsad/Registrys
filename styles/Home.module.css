@@ -23,8 +23,8 @@
     min-width: 100vw;
     font-family:'Helvetica';
     overflow: hidden;
-    background: linear-gradient(177.28deg, #EBFDFE 2.27%, #F8F5FF 49.51%, #F6FCE7 97.74%);
-    z-index: -1;
+    z-index: 0;
+
 }
 
 .background {
@@ -35,7 +35,7 @@
     min-height: 100vh;
     background: linear-gradient(177.28deg, #EBFDFE 2.27%, #F8F5FF 49.51%, #F6FCE7 97.74%);
     height: 100%;
-    z-index: 2;
+    z-index: 1;
 }
 
 .backgroundMobile {
@@ -49,13 +49,12 @@
 
 .main {
     display: flex;
+    position: absolute;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-width: 100vw;
     min-height: 100vh;
-    z-index: 1;
-
 }
 
 .Header {
@@ -140,7 +139,7 @@
     padding: 0px;
     gap: 32px;
     max-width: calc(100% - 124px);
-    max-height: 348px;
+    max-height: 348px;   
 }
 
 .ActionFrameHeader {

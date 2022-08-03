@@ -16,7 +16,11 @@ body {
   margin: 0;
   padding: 0;
   font-family: Helvetica;
-
+  background: linear-gradient(177.28deg, #EBFDFE 2.27%, #F8F5FF 49.51%, #F6FCE7 97.74%);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
 }
 
 a {
