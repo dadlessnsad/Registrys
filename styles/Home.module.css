@@ -130,6 +130,10 @@
 
 .Blockies {
     margin: 6px;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, rgba(188, 235, 0, 0.2) 15.57%, rgba(0, 234, 234, 0.2) 84.88%);
+    border-radius: 7px;
 }
 
 .ActionFrame {
@@ -298,19 +302,14 @@
 
 .closeButtonDiv {
     position: absolute;
-    cursor: pointer;
-    right: 0px;
-    top: -40px;
-    right: -50px;
+    right: -34px;
+    top: -30px;
 }
 
 .closeButton {
-    position: absolute;
-    height: 26px;
-    right: -12px;
-    top: -12px;
-    border-radius: 50%;
+    cursor: pointer;
 }
+
 
 .RoyaltyDiv {
     display: flex;
@@ -525,6 +524,7 @@
     width: 100%;
 }
 
+/*#region Modals*/
 .Backdrop {
     position: absolute;
     display: flex;
@@ -662,6 +662,38 @@
     cursor: pointer;
 }
 
+.NetworkErrorBody {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    -moz-box-align: center;
+    align-items: center;
+    -moz-box-pack: center;
+    justify-content: center;
+    padding: 16px;
+    position: absolute;
+    height: calc(100vh - 40%);
+    width: calc(100vw - 40%);
+    text-align: center;
+    background: #FFFFFF;
+    box-shadow: 0px 10px 36px rgba(136, 120, 172, 0.14);
+    border-radius: 12px;
+    z-index: 9;
+    background: linear-gradient(177.28deg, #EBFDFE 2.27%, #F8F5FF 49.51%, #F6FCE7 97.74%);
+}
+
+.NetworkErrorText {
+    font-family:'Helvetica';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 32px;
+    color: black;
+    padding: 10px 0px;
+    width: 50%;
+}
+
+/*#endregion*/
 
 .Spinner {
     /* animation: Spin infinite 20s linear; */
@@ -791,16 +823,16 @@
     .ConnectedButton {
         display: flex;
         flex-direction: row;
-        padding: 6px 12px;
+        padding: 2px 4px;
         background: #FFFFFF;
         border: 1px solid rgba(0, 0, 0, 0.1);
         border-radius: 12px;
         font-family:'Helvetica';
         font-style: normal;
         font-weight: 700;
-        font-size: 14px;
-        padding: 0px;
-        
+        font-size: 12px;
+        min-width: 96px;
+        min-height: 40px;
     }
 
     
@@ -988,6 +1020,7 @@
         color: #4D66EB;
     }
 
+/*#region Modals */
     .Backdrop {
         position: fixed;
         display: flex;
@@ -1057,6 +1090,30 @@
         border-radius: 12px;
         z-index: 4;
     }
+
+    .NetworkErrorBody {
+        height: calc(100vh - 30%);
+        width: calc(100vw - 20%);
+        text-align: center;
+        background: #FFFFFF;
+        box-shadow: 0px 10px 36px rgba(136, 120, 172, 0.14);
+        border-radius: 12px;
+        z-index: 9;
+        background: linear-gradient(177.28deg, #EBFDFE 2.27%, #F8F5FF 49.51%, #F6FCE7 97.74%);
+    }
+    
+    .NetworkErrorText {
+        font-family:'Helvetica';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 32px;
+        color: black;
+        padding: 10px 0px;
+        width: 100%;
+    }
+
+/*#endregion */
 
 
     .Spinner {

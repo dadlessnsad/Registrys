@@ -291,12 +291,12 @@ export default function Home() {
                 {!loading && txSuccess == true && (
                     <div className={styles.Backdrop}>
                     <div className={styles.TxSuccessBody}>
-                        <Image src="/txSuccess.webp" alt="error" width={100} height={100} />
+                        <Image src="/txSuccess.webp" alt="error" width={96} height={96} />
                         <h1 className={styles.TxSuccessTitle}><strong>Success</strong></h1>
                         <p className={styles.TxSuccessText}>Your royalty has been set successfully.</p>
                         <button className={styles.TxSuccessButton} onClick={toggle}>Close</button>
                         <div className={styles.closeButtonDiv}>
-                                <Image className={styles.closeButton} onClick={toggleError} src="/CloseButton.webp" alt="close" width={100} height={100}/>
+                                <Image className={styles.closeButton} onClick={toggle} src="/closeCross.png" alt="close" width={75} height={75}/>
                         </div>
                     </div>
                 </div>
@@ -304,12 +304,12 @@ export default function Home() {
                 {!loading && txError == true && (
                     <div className={styles.Backdrop}>
                         <div className={styles.TxSuccessBody}>
-                            <Image src="/error.webp" alt="error" width={100} height={100} />
+                            <Image src="/IllustrationError.png" alt="error" width={100} height={100} />
                             <h1 className={styles.TxSuccessTitle}><strong>Transaction failed!</strong></h1>
                             <p className={styles.TxSuccessText}>Please try again later.</p>
                             <button className={styles.TxSuccessButton} onClick={toggleError}>Close</button>
                             <div className={styles.closeButtonDiv}>
-                                <Image className={styles.closeButton} onClick={toggleError} src="/CloseButton.webp" alt="close" width={100} height={100}/>
+                                <Image className={styles.closeButton} onClick={toggleError} src="/closeCross.png" alt="close" width={75} height={75}/>
                             </div>
                         </div>
                     </div>

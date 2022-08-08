@@ -199,12 +199,12 @@ function MyApp({ Component, pageProps }) {
             }
             {network != 1 && provider && networkModalOpen &&(
                 <div className={styles.Backdrop}>
-                    <div className={styles.TxSuccessBody}>
-                            <Image src="/error.webp" alt="error" width={100} height={100} />
-                        <p className={styles.errorText}>Please switch your wallet network to <strong>Mainnet</strong> to use the app. If you still encounter problems, you may want to switch to a different wallet.</p>
+                    <div className={styles.NetworkErrorBody}>
+                            <Image src="/IllustrationError.png" alt="error" width={96} height={96} />
+                        <p className={styles.NetworkErrorText}>Please switch your wallet network to <strong>Mainnet</strong> to use the app. If you still encounter problems, you may want to switch to a different wallet.</p>
                         <button className={styles.errorButton} onClick={switchNetwork}>Switch Network</button>
                         <div className={styles.closeButtonDiv}>
-                            <Image className={styles.closeButton} onClick={toggleError} src="/CloseButton.webp" alt="close" width={100} height={100}/>
+                            <Image className={styles.closeButton} onClick={toggleError} src="/closeCross.png" alt="close" width={75} height={75}/>
                         </div>
                     </div>
                 </div>
