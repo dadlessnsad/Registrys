@@ -289,6 +289,17 @@
     margin: 10px 0px;
 }
 
+.AlertCantVerifyCode {
+    font-family:'Helvetica';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 24px;
+    color: #4D66EB;
+    flex: none;
+    flex-grow: 1;
+}
+
 .AlertNotOwnerText {
     font-family:'Helvetica';
     font-style: normal;
