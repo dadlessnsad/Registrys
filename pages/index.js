@@ -9,12 +9,12 @@ import { AccountContext, ProviderContext, AddressContext, NetworkContext} from '
 import { TransparentUpgradeableProxy, RoyaltyRegistryImplementation} from '../config'
 
 export default function Home() {
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(null)
     const [loadingContractOwner, setLoadingContractOwner] = useState(false)
     const [inputContract, setInputContract] = useState('');
     const [validContract, setValidContract] = useState(null);
     const [invalidContract, setInvalidContract] = useState(null);
-    const [validAddress, setValidAddress] = useState(false);
+    const [validAddress, setValidAddress] = useState(null);
     const [newReceiverAddr, setNewReceiverAddr] = useState('');
     const [newRoyaltyCut, setNewRoyaltyCut] = useState(`0%`);
     const [currentRoyaltiesAddr, setCurrentRoyaltiesAddr] = useState([])
@@ -35,9 +35,6 @@ export default function Home() {
     const ETHERSCAN_KEY = process.env.NEXT_PUBLIC_ETHERSCAN_KEY
     const url = `https://api.etherscan.io/api?module=contract&action=getabi&address=${inputContract}&apikey=KRE9VVJMXIP4ZEVEZSWDZET7NH73KQ4BDQ`
     const registry = `https://api.etherscan.io/api?module=contract&action=getabi&address=${RoyaltyRegistryImplementation}&apikey=KRE9VVJMXIP4ZEVEZSWDZET7NH73KQ4BDQ`
-
-    console.log("tx Success: ",txSuccess)
-    console.log("tx Error: ",txError)
 
     const getContractOwner = useCallback(async () => {
         if(validContract == true) {
@@ -174,14 +171,13 @@ export default function Home() {
                             </div>
                         )}
                         <div className={styles.ActionFrameContractDiv}>
-                            <label className={styles.ActionLabelTitle}>
-                                Collection Address
-                            </label>
+                            {!provider &&  <label className={styles.ActionLabelTitleNoProvider}>Collection Address</label>}
+                            {provider && <label className={styles.ActionLabelTitle}>Collection Address</label>}
                             <input 
                                 className={styles.ContractAddrInput}
                                 type="text" 
                                 disabled={!account && !provider || network != 1}
-                                placeholder="Collection Address" 
+                                placeholder="0x0000..." 
                                 value={inputContract}
                                 onChange={(e) => setInputContract(e.target.value)}
                                 loading={loadingContractOwner}
@@ -232,11 +228,12 @@ export default function Home() {
                         )}
                         <div className={styles.RoyaltyDiv}>
                             <div className={styles.RoyaltyAddressDiv}>
-                                <label className={styles.RoyaltyAddrLabel}>Receiver Address</label>
+                                {isOwner != true && <label className={styles.RoyaltyAddrLabelNotValid} >Royalty Percent</label>}
+                                {isOwner && validAddress && <label className={styles.RoyaltyAddrLabel}>Receiver Address</label>}
                                 <input
                                     className={styles.RoyaltyAddrInput}
                                     type="text"
-                                    placeholder="Receiver Address"
+                                    placeholder="0x0000..."
                                     required
                                     disabled={isOwner != true || validContract == false}
                                     value={newReceiverAddr}
@@ -245,13 +242,14 @@ export default function Home() {
                                 {!validAddress && newReceiverAddr != '' && <span className={styles.AlertInvalidAddress}>Invalid address</span>}
                             </div>
                             <div className={styles.RoyaltyCutDiv}>
-                                <label className={styles.RoyaltyAddrLabel} >Royalty Percent</label>
+                                {isOwner != true && <label className={styles.RoyaltyAddrLabelNotValid} >Royalty Percent</label>}
+                                {isOwner && validAddress && <label className={styles.RoyaltyAddrLabel} >Royalty Percent</label>}
                                 <input 
                                     className={styles.RoyaltyPercentInput} 
                                     type="number"
                                     min={0}
                                     max={20}
-                                    placeholder={`0% - 20%`}
+                                    placeholder={`%`}
                                     required
                                     disabled={isOwner != true || validContract == false}
                                     value={newRoyaltyCut} 

@@ -64,8 +64,7 @@
     align-items: center;
     justify-content: space-between;
     min-width: 100%;
-    height: 100px;
-    padding: 0px 80px;
+    padding: 0px 32px;
     z-index: 1;
 }
 
@@ -75,21 +74,35 @@
     text-align: center;
 }
 
+.headerLine {
+    margin: 28px 16px 0px 0px;
+}
+
+.headerText {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    color: #18181B;
+    margin: 28px 16px 0px 0px;
+}
+
+
 .BackToHomeText{
-    display: flex;
+    display: flex;  
     align-items: center;
     text-align: center;
-    padding: 0px 24px;
+    margin: 28px 16px 0px 0px;
     cursor: pointer;
     border: none;
 }
 
 .ConnectButton {
     display: flex;
+    position: relative;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding: 10px 16px;
+    top: 20px;
     min-width: 133px;
     min-height: 40px;
     background: linear-gradient(135deg, #BCEB00 15.57%, #00EAEA 84.88%);
@@ -107,6 +120,8 @@
 
 .ConnectedButton {
     display: flex;
+    position: relative;
+    top: 20px;
     flex-direction: row;
     align-items: center;
     padding: 10px 16px;
@@ -202,13 +217,24 @@
 
 .ActionLabelTitle {
     height: 22px;
-    margin: 8px 4px;
+    margin: 8px 0px;
     font-family:'Helvetica';
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
     font-feature-settings: 'ss04' on;
     color: #000000;
+}
+
+.ActionLabelTitleNoProvider {
+    height: 22px;
+    margin: 8px 0px;
+    font-family:'Helvetica';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    font-feature-settings: 'ss04' on;
+    color: rgba(0, 0, 0, 0.4);
 }
 
 .ContractAddrInput {
@@ -345,16 +371,37 @@
 .RoyaltyAddrLabel {
     min-width: 100%;
     height: 22px;
+    margin: 8px 0px;
     font-family:'Helvetica';
     font-style: normal;
     font-weight: 700;
     font-size: 14px;
-    line-height: 22px;
+    font-feature-settings: 'ss04' on;
+    color: #000000;
+}
+
+.RoyaltyAddrLabelNotValid {
+    min-width: 100%;
+    height: 22px;
+    margin: 8px 0px;
+    font-family:'Helvetica';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
     font-feature-settings: 'ss04' on;
     color: rgba(0, 0, 0, 0.4);
-    flex: none;
-    flex-grow: 0;
 }
+
+/* height: 22px;
+font-family:'Helvetica';
+font-style: normal;
+font-weight: 700;
+font-size: 14px;
+line-height: 22px;
+font-feature-settings: 'ss04' on;
+color: rgba(0, 0, 0, 0.4);
+flex: none;
+flex-grow: 0; */
 
 .RoyaltyAddrInput {
     width: 100%;
@@ -415,11 +462,29 @@
     border: none;
 }
 
+.SetRoyaltiesButton:disabled {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 16px;
+    width: 100%;
+    height: 40px;
+    /* Neutrals/Black/Transparent/Black 5 */
+    background: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+    cursor: not-allowed;
+    font-family:'Helvetica';
+    font-style: normal;
+    font-weight: 700;    border: none;
+}
+
 .dropdown {
     position: absolute;
     width: 240px;
     height: 200px;
-    right: 80px;
+    right: 32px;
     top: 70px;
     padding: 0px 10px;
     display: flex;
@@ -770,20 +835,18 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        min-width: 100%;
+        max-width: 100vw;
     }
 
     .Header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0px 10px;
-    gap: 10px;
-    position: fixed;
-    max-width: 100%;
-    height: 80px;
-    z-index: 1;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0px 10px;
+        position: fixed;
+        max-width: 100%;
+        z-index: 1;
     }
 
     .HeaderDiv {
@@ -791,12 +854,27 @@
         align-items: center;
         text-align: center;
     }
+
+    .headerText {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 20px;
+        color: #18181B;
+        margin: 28px 8px 0px 0px;
+    }
+    
+    
+    .headerLine {
+        margin: 28px 8px 0px 0px;
+    }
+    
     
     .BackToHomeText{
         display: flex;
         align-items: center;
         text-align: center;
         padding: 0px 12px;
+        margin: 28px 4px 0px 0px;
         text-decoration: underline;
         font-size: 14px;
         cursor: pointer;
@@ -808,20 +886,27 @@
         max-height: 50px;
     }
 
+    .logoLine {
+        width: 24px;
+        height: 0px;
+
+        /* Neutrals/Black/Transparent/Black 10 */
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        transform: rotate(90deg);
+
+        /* Inside auto layout */
+        flex: none;
+        order: 1;
+        flex-grow: 0;
+    }
+
     .headerText {
         font-size: 14px;
     }
 
     .ConnectButton {
         display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        padding: 4px 6px;
-        min-height: 40px;
-        background: linear-gradient(135deg, #BCEB00 15.57%, #00EAEA 84.88%);
-        box-shadow: 0px 10px 20px rgba(136, 120, 172, 0.2);
-        border-radius: 12px;
+        top: 16px;
         font-family:'Helvetica';
         font-style: normal;
         font-weight: 700;
@@ -834,7 +919,9 @@
     .ConnectedButton {
         display: flex;
         flex-direction: row;
-        padding: 2px 4px;
+        position: relative;
+        padding: 0px;
+        top: 16px;
         background: #FFFFFF;
         border: 1px solid rgba(0, 0, 0, 0.1);
         border-radius: 12px;
@@ -984,11 +1071,17 @@
     
 
     .SetRoyaltiesButton {
+        text-align: center;
         margin: 0px 0px;
         padding: 10px 16px;
         width: 100%;
         height: 40px;
     }
+
+    .SetRoyaltiesButton:disabled {
+        cursor: not-allowed;
+    }
+    
 
     .error {
         position: absolute;
