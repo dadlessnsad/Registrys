@@ -248,6 +248,16 @@
     font-family: 'Helvetica', sans-serif;
 }
 
+.ContractAddrInput:disabled {
+    width: 100%;
+    min-height: 40px;
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-family: 'Helvetica', sans-serif;
+}
+
 .AlertNotOwner {
     display: flex;
     flex-direction: row;
@@ -392,18 +402,17 @@
     color: rgba(0, 0, 0, 0.4);
 }
 
-/* height: 22px;
-font-family:'Helvetica';
-font-style: normal;
-font-weight: 700;
-font-size: 14px;
-line-height: 22px;
-font-feature-settings: 'ss04' on;
-color: rgba(0, 0, 0, 0.4);
-flex: none;
-flex-grow: 0; */
-
 .RoyaltyAddrInput {
+    width: 100%;
+    min-height: 40px;
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-family: 'Helvetica', sans-serif;
+}
+
+.RoyaltyAddrInput:disabled {
     width: 100%;
     min-height: 40px;
     background: rgba(0, 0, 0, 0.02);
@@ -433,6 +442,16 @@ flex-grow: 0; */
 }
 
 .RoyaltyPercentInput {
+    width: 100%;
+    min-height: 40px;
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-family: 'Helvetica', sans-serif;
+}
+
+.RoyaltyPercentInput:disabled {
     width: 100%;
     min-height: 40px;
     background: rgba(0, 0, 0, 0.02);

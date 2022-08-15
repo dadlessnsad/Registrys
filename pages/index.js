@@ -228,7 +228,7 @@ export default function Home() {
                         )}
                         <div className={styles.RoyaltyDiv}>
                             <div className={styles.RoyaltyAddressDiv}>
-                                {isOwner != true && <label className={styles.RoyaltyAddrLabelNotValid} >Royalty Percent</label>}
+                                {isOwner != true && <label className={styles.RoyaltyAddrLabelNotValid}>Receiver Address</label>}
                                 {isOwner && validAddress && <label className={styles.RoyaltyAddrLabel}>Receiver Address</label>}
                                 <input
                                     className={styles.RoyaltyAddrInput}
