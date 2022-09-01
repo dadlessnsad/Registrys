@@ -6,7 +6,7 @@ import IERC721 from '../contracts/IERC721A.json'
 import axios from 'axios'
 import { ethers } from 'ethers'
 import { AccountContext, ProviderContext, AddressContext, NetworkContext} from '../context'
-import { TransparentUpgradeableProxy, RoyaltyRegistryImplementation} from '../config'
+import { TransparentUpgradeableProxy, RoyaltyRegistryImplementation, TransparentUpgradeableProxyRinkeby, RoyaltyRegistryImplementationRinkeby } from '../config'
 
 export default function Home() {
     const [loading, setLoading] = useState(null)
@@ -32,9 +32,10 @@ export default function Home() {
     const toggle = () => setTxSuccess(!txSuccess);
     const toggleError = () => setTxError(!txError);
 
+    const etherscanURL = "https://api-rinkeby.etherscan.io/"
     const ETHERSCAN_KEY = process.env.NEXT_PUBLIC_ETHERSCAN_KEY
-    const url = `https://api.etherscan.io/api?module=contract&action=getabi&address=${inputContract}&apikey=KRE9VVJMXIP4ZEVEZSWDZET7NH73KQ4BDQ`
-    const registry = `https://api.etherscan.io/api?module=contract&action=getabi&address=${RoyaltyRegistryImplementation}&apikey=KRE9VVJMXIP4ZEVEZSWDZET7NH73KQ4BDQ`
+    const url = `${etherscanURL}api?module=contract&action=getabi&address=${inputContract}&apikey=KRE9VVJMXIP4ZEVEZSWDZET7NH73KQ4BDQ`
+    const registry = `${etherscanURL}api?module=contract&action=getabi&address=${RoyaltyRegistryImplementationRinkeby}&apikey=KRE9VVJMXIP4ZEVEZSWDZET7NH73KQ4BDQ`
 
     const getContractOwner = useCallback(async () => {
         if(validContract == true) {
@@ -68,7 +69,7 @@ export default function Home() {
                 setLoadingContractOwner(true)
                 const res = await axios.get(registry)
                 const _abi = await JSON.parse(res.data.result);
-                const _registry = new ethers.Contract(TransparentUpgradeableProxy, _abi, provider);
+                const _registry = new ethers.Contract(TransparentUpgradeableProxyRinkeby, _abi, provider);
                 const [data] = await _registry.readCollectionRoyalties(inputContract);
                 const [royaltiesAddr, royaltiesValue] = data;
                 let addr = royaltiesAddr.substring(0, 6) + "..." + royaltiesAddr.substring(36)
@@ -92,7 +93,7 @@ export default function Home() {
                     const res = await axios.get(registry)
                     const _abi = await JSON.parse(res.data.result);
                     const signer = provider.getSigner();
-                    const _registry = new ethers.Contract(TransparentUpgradeableProxy, _abi, signer);
+                    const _registry = new ethers.Contract(TransparentUpgradeableProxyRinkeby, _abi, signer);
                     const setPercentage = newRoyaltyCut * 100;
                     const royaltiesByTokenAndTokenId = await _registry.setRoyaltiesByToken(
                         inputContract,
@@ -176,13 +177,13 @@ export default function Home() {
                             <input 
                                 className={styles.ContractAddrInput}
                                 type="text" 
-                                disabled={!account && !provider || network != 1}
+                                disabled={!account && !provider || network != 4}
                                 placeholder="0x0000..." 
                                 value={inputContract}
                                 onChange={(e) => setInputContract(e.target.value)}
                                 loading={loadingContractOwner}
                             />
-                            {loadingContractOwner && validContract && isOwner == false && network == 1 && (
+                            {loadingContractOwner && validContract && isOwner == false && network == 4 && (
                                 <svg className={styles.ContractSpinner} width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M17.5 9C17.5 11.2203 16.5955 13.2294 15.1348 14.6788C13.6888 16.1136 11.6979 17 9.5 17C5.08172 17 1.5 13.4183 1.5 9C1.5 4.58172 5.08172 1 9.5 1C13.31 1 16.498 3.66345 17.3035 7.23001" stroke="url(#paint0_angular_3739_24590)" strokeWidth="1.5" strokeLinecap="round"/>
                                         <defs>
@@ -217,7 +218,7 @@ export default function Home() {
                                 </p>
                             </div>
                         )}
-                        {!loadingContractOwner && validContract && isOwner == false && network == 1 && invalidContract &&(
+                        {!loadingContractOwner && validContract && isOwner == false && network == 4 && invalidContract &&(
                             <div className={styles.AlertNotOwner}>
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M10.3125 16.5H10.875V10.875H10.3125C10.0019 10.875 9.75 10.6231 9.75 10.3125V9.9375C9.75 9.62686 10.0019 9.375 10.3125 9.375H12.5625C12.8731 9.375 13.125 9.62686 13.125 9.9375V16.5H13.6875C13.9981 16.5 14.25 16.7519 14.25 17.0625V17.4375C14.25 17.7481 13.9981 18 13.6875 18H10.3125C10.0019 18 9.75 17.7481 9.75 17.4375V17.0625C9.75 16.7519 10.0019 16.5 10.3125 16.5ZM12 5.25C11.1716 5.25 10.5 5.92158 10.5 6.75C10.5 7.57842 11.1716 8.25 12 8.25C12.8284 8.25 13.5 7.57842 13.5 6.75C13.5 5.92158 12.8284 5.25 12 5.25Z" fill="#4D66EB"/>

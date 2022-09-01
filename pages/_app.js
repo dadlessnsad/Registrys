@@ -54,7 +54,7 @@ function MyApp({ Component, pageProps }) {
 
     async function getWeb3Modal() {
         const web3modal = new Web3Modal({
-            network: 'mainnet',
+            network: 'rinkeby',
             cacheProvider: false,
             providerOptions: {
                 walletconnect: {
@@ -68,7 +68,7 @@ function MyApp({ Component, pageProps }) {
                     options: {
                         appName: "NFT Embed Royalties", // Required
                         infuraId:  INFURA_ID,
-                        chainId: 1, 
+                        chainId: 0x4, 
                         darkMode: false
                     }
                 }
@@ -78,7 +78,7 @@ function MyApp({ Component, pageProps }) {
     }
 
     const getBalance = useCallback(async () => {
-        if(account && network == 1) {
+        if(account && network == 4) {
             try {
                 const res = axios.get(
                     `https://api.etherscan.io/api?module=account&action=balance&address=${account}&tag=latest&apikey=KRE9VVJMXIP4ZEVEZSWDZET7NH73KQ4BDQ`
@@ -124,7 +124,7 @@ function MyApp({ Component, pageProps }) {
         ethereum.request({
             method: "wallet_switchEthereumChain",
             params: [{
-                chainId: "0x1"
+                chainId: "0x4"
             }]
         }).then( () => {
             window.location.reload();
@@ -153,7 +153,7 @@ function MyApp({ Component, pageProps }) {
                 setAddress(accounts[0].substring(0, 6) + "..." + accounts[0].substring(36)); 
             }
             setNetwork(_network)
-            if(network != 1) {
+            if(network != 4) {
                 setNetworkModalOpen(true)
             }
         }   catch (err) {
@@ -196,11 +196,11 @@ function MyApp({ Component, pageProps }) {
                     isPaused={false}
                 />
             }
-            {network != 1 && provider && networkModalOpen &&(
+            {network != 4 && provider && networkModalOpen &&(
                 <div className={styles.Backdrop}>
                     <div className={styles.NetworkErrorBody}>
                             <Image src="/IllustrationError.png" alt="error" width={96} height={96} />
-                        <p className={styles.NetworkErrorText}>Please switch your wallet network to <strong>Mainnet</strong> to use the app. If you still encounter problems, you may want to switch to a different wallet.</p>
+                        <p className={styles.NetworkErrorText}>Please switch your wallet network to <strong>rinkeby</strong> to use the app. If you still encounter problems, you may want to switch to a different wallet.</p>
                         <button className={styles.errorButton} onClick={switchNetwork}>Switch Network</button>
                         <div className={styles.closeButtonDiv}>
                             <Image className={styles.closeButton} onClick={toggleError} src="/closeCross.png" alt="close" width={75} height={75}/>

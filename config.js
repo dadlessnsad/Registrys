@@ -1,2 +1,4 @@
 export const TransparentUpgradeableProxy = '0x2A9647901684caaeC6f026eEc0b1355195313cB5'
 export const RoyaltyRegistryImplementation = '0x895197aC6CF7CBE43DDbFe0885ED3437D2e2C359'
+export const TransparentUpgradeableProxyRinkeby = '0x58e1A04dC9d4655234f8eEc8071fC60093113648'
+export const RoyaltyRegistryImplementationRinkeby = '0x1656964ECb4Eec74D44Cc605fA5ddF42FA71A6cF'
